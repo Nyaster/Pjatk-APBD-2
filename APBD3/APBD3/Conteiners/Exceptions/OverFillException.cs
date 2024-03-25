@@ -2,5 +2,7 @@
 
 public class OverFillException : Exception
 {
-    public override string Message { get=>"Your trying to overload container"; }
+    public OverFillException(string? message) : base(message)
+    {
+    }
 }

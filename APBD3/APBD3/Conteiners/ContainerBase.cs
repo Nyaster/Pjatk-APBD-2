@@ -1,51 +1,56 @@
 ﻿using APBD3.Conteiners.Enums;
+using APBD3.Conteiners.interfaces;
 
 namespace APBD3.Conteiners;
 
-public class ContainerBase
+public abstract class ContainerBase
 {
     protected static int Globalindex { get; set; }
 
-    public int Index { get; }
-    protected double MaxWeight { get; }
-    protected int Height { get; }
-    protected int Width { get; }
-    protected double OwnWeight { get; }
-    protected double LoadedWeight { get; set; }
-    protected ContainerType ContainerType { get; }
-    private string containerName;
+    public int Index { get; protected set; }
+    public double MaxWeight { get; protected set; }
+    public int Height { get; protected set; }
+    public int Width { get; protected set; }
+    public double OwnWeight { get; protected set; }
+    public double LoadedWeight { get; protected set; }
 
-    protected string ContainerName
+    public double TotalWeight
     {
-        get => "KON-" + containerName + "-" + Index;
+        get { return OwnWeight + LoadedWeight; }
     }
 
-    public ContainerBase(double maxWeight, int height, int width, ContainerType containerType, double ownWeight,
-        string containerName)
+    protected ContainerType ContainerType { get; }
+
+    public string ContainerName
+    {
+        get => "KON-" + ContainerType + "-" + Index;
+    }
+
+    protected ContainerBase(double maxWeight, int height, int width, double ownWeight, ContainerType containerType)
     {
         MaxWeight = maxWeight;
         Height = height;
         Width = width;
         ContainerType = containerType;
         OwnWeight = ownWeight;
-        this.containerName = containerName;
         Index = ContainerBase.Globalindex++;
     }
 
-    protected double Unload()
+    public abstract ILoad Unload(double howMuch);
+    public abstract ILoad Unload();
+
+    public override string ToString()
     {
-        var loadedWeight = LoadedWeight;
-        LoadedWeight = 0;
-        return loadedWeight;
+        return $"Container Name: {ContainerName}\n" +
+               $"Index: {Index}\n" +
+               $"Max Weight: {MaxWeight}\n" +
+               $"Height: {Height}\n" +
+               $"Width: {Width}\n" +
+               $"Own Weight: {OwnWeight}\n" +
+               $"Loaded Weight: {LoadedWeight}\n" +
+               $"Total Weight: {TotalWeight}\n" +
+               $"Container Type: {ContainerType}";
     }
 
-    protected void LoadWeight(double weight)
-    {
-        if ((weight + LoadedWeight) > MaxWeight)
-        {
-            throw new OverFillException();
-        }
-
-        LoadedWeight += weight;
-    }
+    public abstract void LoadWeight(ILoad weight);
 }
