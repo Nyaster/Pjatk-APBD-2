@@ -23,12 +23,18 @@ public class ContainerC : ContainerBase
 
     public override ILoad Unload(double howMuch)
     {
-        throw new NotImplementedException();
+        if (howMuch > LoadedWeight)
+        {
+            return Unload();
+        }
+
+        LoadedWeight -= howMuch;
+        return new FoodLoad(howMuch, FoodType, OwnTemperature);
     }
 
     public override ILoad Unload()
     {
-        throw new NotImplementedException();
+        return new FoodLoad(LoadedWeight, FoodType, OwnTemperature);
     }
 
     public override void LoadWeight(ILoad weight)
@@ -42,6 +48,7 @@ public class ContainerC : ContainerBase
             SendNotification(e.Message);
             return;
         }
+
         var foodLoad = weight as FoodLoad;
         if (LoadedWeight == 0)
         {

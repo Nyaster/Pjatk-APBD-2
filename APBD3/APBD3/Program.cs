@@ -20,7 +20,7 @@ class Program
         var containerOnShip = ship.putContainerOnShip(cCont);
         List<ContainerBase> list = new List<ContainerBase>();
         Console.WriteLine(cCont);
-        ship.printAllDataAboutLoad();
+        ship.PrintAllDataAboutLoad();
         
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿
 using APBD3.Conteiners;
 
 namespace APBD3;
@@ -19,7 +19,7 @@ public class Ship
 
     public bool putContainerOnShip(ContainerBase containerBase)
     {
-        if (calculateWeight() + containerBase.LoadedWeight > maxWeight * 1000)
+        if (CalculateWeight() + containerBase.LoadedWeight > maxWeight * 1000)
         {
             Console.WriteLine("Not enought weigth for containers");
             return false;
@@ -51,23 +51,51 @@ public class Ship
         return true;
     }
 
-    private double calculateWeight()
+    private double CalculateWeight()
     {
         double sum = 0;
         var d = ContainerPlaces.Sum(x => x.TotalWeight);
         return d;
     }
 
-    public List<ContainerBase> unload()
+    public List<ContainerBase> Unload()
     {
         List<ContainerBase> containerPlaces = ContainerPlaces;
         ContainerPlaces = new List<ContainerBase>();
         return containerPlaces;
     }
 
-    public void printAllDataAboutLoad()
+    public void PrintAllDataAboutLoad()
     {
         Console.WriteLine("===========Ship Load============");
-        ContainerPlaces.ForEach(x => Console.WriteLine(x));
+        for (var i = 0; i < ContainerPlaces.Count; i++)
+        {
+            Console.WriteLine(ContainerPlaces[i] + " \n Container number is: " + i);
+        }
+    }
+
+    public ContainerBase? Unload(int i)
+    {
+        if (ContainerPlaces.Count < i)
+        {
+            Console.WriteLine("Error");
+            return null;
+        }
+
+        var containerPlace = ContainerPlaces[i];
+        ContainerPlaces.Remove(containerPlace);
+        return containerPlace;
+    }
+
+    public bool ReplaceContainer(int i, ContainerBase containerBase)
+    {
+        if (ContainerPlaces.Count < i)
+        {
+            Console.WriteLine("Error");
+            return false;
+        }
+
+        ContainerPlaces[i] = containerBase;
+        return true;
     }
 }
